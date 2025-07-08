@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        #map {
+            width: 1403px;
+            height: 843px;
+        }
+        </style>
+        <title>Fleet Services by Cox Auto Service Territories</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/FleetServicesTerritories_1.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[29.843399650518855,-103.96158776753865],[51.837740614966144,-54.7662473989298]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        document.querySelector(".leaflet-popup-pane").addEventListener("load", function(event) {
+          var tagName = event.target.tagName,
+            popup = map._popup;
+          // Also check if flag is already set.
+          if (tagName === "IMG" && popup && !popup._updated) {
+            popup._updated = true; // Set flag to prevent looping.
+            popup.update();
+          }
+        }, true);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OpenStreetMap_0');
+        map.getPane('pane_OpenStreetMap_0').style.zIndex = 400;
+        var layer_OpenStreetMap_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenStreetMap_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+        });
+        layer_OpenStreetMap_0;
+        map.addLayer(layer_OpenStreetMap_0);
+        function pop_FleetServicesTerritories_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Polygon Name</th>\
+                        <td class="visible-with-data" id="Polygon Name">' + (feature.properties['Polygon Name'] !== null ? autolinker.link(feature.properties['Polygon Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Service Territory</th>\
+                        <td class="visible-with-data" id="Service Territory">' + (feature.properties['Service Territory'] !== null ? autolinker.link(feature.properties['Service Territory'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Dispatch</th>\
+                        <td class="visible-with-data" id="Shared Inbox">' + (feature.properties['Shared Inbox'] !== null ? autolinker.link(feature.properties['Shared Inbox'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Contact Details</th>\
+                        <td class="visible-with-data" id="Contact Details">' + (feature.properties['Contact Details'] !== null ? autolinker.link(feature.properties['Contact Details'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_FleetServicesTerritories_1_0(feature) {
+            switch(String(feature.properties['Service Territory'])) {
+                case '1100 New York City':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(111,158,227,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1200 So Calif':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(143,204,102,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1300 Houston':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(220,45,211,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1400 Greater Chicago Area':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(169,103,236,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1500 Dallas-Fort Worth':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(88,221,179,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2800 Greater Indianapolis':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,236,98,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1600 Carolinas':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(174,113,202,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1700 No Calif':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(47,55,210,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1800 MI/Greater Detroit Area':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(206,213,79,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '1900 Cleveland/Pittsburgh':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(35,162,201,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2000 DC and VA Triangle':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,99,106,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2100 New England':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,30,138,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2200 ATL':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,138,178,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2400 MN':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(50,201,126,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2300 Eastern PA and South Jersey':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(229,32,78,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2500 So Fla':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,104,47,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2600 Washington':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(68,217,26,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '2700 Arizona':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,133,62,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3000 Oregon':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,43,173,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3100 Oklahoma':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(105,131,227,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3200 Tampa':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(175,215,44,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3300 Jacksonville':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(34,154,240,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3400 Columbus':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(127,110,240,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3500 Cincinnati':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(107,46,238,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3600 ORLANDO':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,211,196,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '3900 Denver':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(209,170,84,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4000 Kansas City/Kansas':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,149,136,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4100 St. Louis, MO/Illinois':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(71,225,120,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4200 Nashville CST':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,32,202,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4200 Nashville EST':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(205,177,18,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4400 Alabama CST':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(102,200,99,0.537)',
+                interactive: true,
+            }
+                    break;
+                case '4400 Louisiana CST':
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(146,233,25,0.537)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_FleetServicesTerritories_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.537)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,205,213,0.537)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_FleetServicesTerritories_1');
+        map.getPane('pane_FleetServicesTerritories_1').style.zIndex = 401;
+        map.getPane('pane_FleetServicesTerritories_1').style['mix-blend-mode'] = 'normal';
+        var layer_FleetServicesTerritories_1 = new L.geoJson(json_FleetServicesTerritories_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_FleetServicesTerritories_1',
+            layerName: 'layer_FleetServicesTerritories_1',
+            pane: 'pane_FleetServicesTerritories_1',
+            onEachFeature: pop_FleetServicesTerritories_1,
+            style: style_FleetServicesTerritories_1_0,
+        });
+        bounds_group.addLayer(layer_FleetServicesTerritories_1);
+        map.addLayer(layer_FleetServicesTerritories_1);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Fleet Services by Cox Auto Service Territories</h2>';
+            };
+            title.addTo(map);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        setBounds();
+        var i = 0;
+        layer_FleetServicesTerritories_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Service Territory'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial Rounded MT Bold\', sans-serif;">' + layer.feature.properties['Service Territory']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_FleetServicesTerritories_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_FleetServicesTerritories_1]);
+        map.on("zoomend", function(){
+            resetLabels([layer_FleetServicesTerritories_1]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_FleetServicesTerritories_1]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_FleetServicesTerritories_1]);
+        });
+        </script>
+    </body>
+</html>
